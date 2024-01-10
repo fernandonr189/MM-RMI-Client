@@ -11,6 +11,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ForkJoinPool;
 
+// access = (MatrixMultiplicationInterface) Naming.lookup("rmi://" + "length-scuba.gl.at.ply.gg" + ":" + 23042 + "/MatrixMultiplication");
 enum Algorithm {
     NONE,
     SEQUENTIAL,
@@ -160,11 +161,11 @@ public class View extends JFrame {
             unsortedTextPane.setText(MatrixUtilities.getMatrixString(matrix));
 
             switch (algorithm) {
-                case NONE -> {
+                case NONE: {
                     messageLabel.setText("Seleccione un algoritmo!");
                     break;
                 }
-                case SEQUENTIAL -> {
+                case SEQUENTIAL: {
                     try {
                         int[][] resultMatrix = access.sequentialMultiplication(matrix, 2);
                         long duration = access.getDuration();
@@ -174,7 +175,7 @@ public class View extends JFrame {
                     }
                     break;
                 }
-                case EXECUTE -> {
+                case EXECUTE:  {
                     try {
                         int[][] resultMatrix = access.executorServiceMultiplication(matrix, 2);
                         long duration = access.getDuration();
@@ -184,7 +185,7 @@ public class View extends JFrame {
                     }
                     break;
                 }
-                case FORKJOIN -> {
+                case FORKJOIN: {
                     try {
                         int[][] resultMatrix  = access.forkJoinMultiplication(matrix, 2, 0, matrix.length);
                         long duration = access.getDuration();
@@ -201,10 +202,10 @@ public class View extends JFrame {
     private void selectSortingAlgorithm(Algorithm selected) {
         this.algorithm = selected;
         switch (algorithm) {
-            case NONE -> selectedAlgorithmLabel.setText("<html>Algoritmo<br>selecciónado:<br>Ninguno</html>");
-            case SEQUENTIAL -> selectedAlgorithmLabel.setText("<html>Algoritmo<br>selecciónado:<br>Secuencial</html>");
-            case FORKJOIN -> selectedAlgorithmLabel.setText("<html>Algoritmo<br>selecciónado:<br>Execute</html>");
-            case EXECUTE -> selectedAlgorithmLabel.setText("<html>Algoritmo<br>selecciónado:<br>Forkjoin</html>");
+            case NONE: selectedAlgorithmLabel.setText("<html>Algoritmo<br>selecciónado:<br>Ninguno</html>");
+            case SEQUENTIAL: selectedAlgorithmLabel.setText("<html>Algoritmo<br>selecciónado:<br>Secuencial</html>");
+            case FORKJOIN: selectedAlgorithmLabel.setText("<html>Algoritmo<br>selecciónado:<br>Execute</html>");
+            case EXECUTE: selectedAlgorithmLabel.setText("<html>Algoritmo<br>selecciónado:<br>Forkjoin</html>");
         }
     }
 }
