@@ -155,7 +155,7 @@ public class View extends JFrame {
 
         startButton.addActionListener(e -> {
             int rows = Integer.parseInt(arraySizeTextField.getText());
-            int[][] matrix = MatrixUtilities.createRandomMatrix(10, rows * 25);
+            int[][] matrix = MatrixUtilities.createRandomMatrix(10, rows * 12);
 
             unsortedTextPane.setText(MatrixUtilities.getMatrixString(matrix));
 
