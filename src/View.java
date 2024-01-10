@@ -35,7 +35,7 @@ public class View extends JFrame {
 
     {
         try {
-            access = (MatrixMultiplicationInterface) Naming.lookup("rmi://" + "localhost" + ":" + 9090 + "/MatrixMultiplication");
+            access = (MatrixMultiplicationInterface) Naming.lookup("rmi://" + "length-scuba.gl.at.ply.gg" + ":" + 23042 + "/MatrixMultiplication");
         } catch (NotBoundException | MalformedURLException | RemoteException e) {
             throw new RuntimeException(e);
         }
@@ -155,7 +155,7 @@ public class View extends JFrame {
 
         startButton.addActionListener(e -> {
             int rows = Integer.parseInt(arraySizeTextField.getText());
-            int[][] matrix = MatrixUtilities.createRandomMatrix(10, rows * 25);
+            int[][] matrix = MatrixUtilities.createRandomMatrix(10, rows * 12);
 
             unsortedTextPane.setText(MatrixUtilities.getMatrixString(matrix));
 
@@ -176,7 +176,7 @@ public class View extends JFrame {
                 }
                 case EXECUTE -> {
                     try {
-                        int[][] resultMatrix = access.forkJoinMultiplication(matrix, 2, 0, matrix.length);
+                        int[][] resultMatrix = access.executorServiceMultiplication(matrix, 2);
                         long duration = access.getDuration();
                         elapsedTimeForkJoin.setText("FrokJoin: " + formatter.format(duration / 1000) + " Microsegundos");
                     } catch (RemoteException ex) {
@@ -186,7 +186,7 @@ public class View extends JFrame {
                 }
                 case FORKJOIN -> {
                     try {
-                        int[][] resultMatrix  = access.executorServiceMultiplication(matrix, 2);
+                        int[][] resultMatrix  = access.forkJoinMultiplication(matrix, 2, 0, matrix.length);
                         long duration = access.getDuration();
                         elapsedTimeExecute.setText("Execute: " + formatter.format(duration / 1000) + " Microsegundos");
                     } catch (RemoteException ex) {
@@ -203,8 +203,8 @@ public class View extends JFrame {
         switch (algorithm) {
             case NONE -> selectedAlgorithmLabel.setText("<html>Algoritmo<br>selecciónado:<br>Ninguno</html>");
             case SEQUENTIAL -> selectedAlgorithmLabel.setText("<html>Algoritmo<br>selecciónado:<br>Secuencial</html>");
-            case FORKJOIN -> selectedAlgorithmLabel.setText("<html>Algoritmo<br>selecciónado:<br>ForkJoin</html>");
-            case EXECUTE -> selectedAlgorithmLabel.setText("<html>Algoritmo<br>selecciónado:<br>Execute</html>");
+            case FORKJOIN -> selectedAlgorithmLabel.setText("<html>Algoritmo<br>selecciónado:<br>Execute</html>");
+            case EXECUTE -> selectedAlgorithmLabel.setText("<html>Algoritmo<br>selecciónado:<br>Forkjoin</html>");
         }
     }
 }
