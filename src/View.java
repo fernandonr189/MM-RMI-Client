@@ -178,7 +178,7 @@ public class View extends JFrame {
                     try {
                         int[][] resultMatrix = access.executorServiceMultiplication(matrix, 2);
                         long duration = access.getDuration();
-                        elapsedTimeForkJoin.setText("FrokJoin: " + formatter.format(duration / 1000) + " Microsegundos");
+                        elapsedTimeForkJoin.setText("Fork: " + formatter.format(duration / 1000) + " Microsegundos");
                     } catch (RemoteException ex) {
                         throw new RuntimeException(ex);
                     }
