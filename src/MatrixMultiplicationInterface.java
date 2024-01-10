@@ -7,4 +7,6 @@ public interface MatrixMultiplicationInterface extends Remote {
     public int[][] executorServiceMultiplication(int[][] _matrix, int _factor) throws RemoteException;
 
     public int[][] sequentialMultiplication(int[][] _matrix, int _factor) throws RemoteException;
+
+    public long getDuration() throws RemoteException;
 }

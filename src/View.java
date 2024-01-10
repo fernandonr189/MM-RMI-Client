@@ -19,7 +19,6 @@ enum Algorithm {
 }
 
 public class View extends JFrame {
-
     private final JTextPane unsortedTextPane;
     private final JTextPane sortedTextPane;
     private final JTextField arraySizeTextField;
@@ -31,6 +30,16 @@ public class View extends JFrame {
     private Algorithm algorithm = Algorithm.NONE;
     private String host;
     private int port;
+
+    private final MatrixMultiplicationInterface access;
+
+    {
+        try {
+            access = (MatrixMultiplicationInterface) Naming.lookup("rmi://" + "localhost" + ":" + 9090 + "/MatrixMultiplication");
+        } catch (NotBoundException | MalformedURLException | RemoteException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
 
     final DecimalFormat formatter = new DecimalFormat("#,###");
@@ -157,39 +166,30 @@ public class View extends JFrame {
                 }
                 case SEQUENTIAL -> {
                     try {
-                        long start = System.nanoTime();
-                        MatrixMultiplicationInterface access = (MatrixMultiplicationInterface) Naming.lookup("rmi://" + host + ":" + port + "/MatrixMultiplication");
                         int[][] resultMatrix = access.sequentialMultiplication(matrix, 2);
-                        long finish = System.nanoTime();
-                        long elapsed_time = finish - start;
-                        elapsedTimeSequential.setText("Secuencial: " + formatter.format(elapsed_time / 1000) + " Microsegundos");
-                    } catch (NotBoundException | RemoteException | MalformedURLException ex) {
+                        long duration = access.getDuration();
+                        elapsedTimeSequential.setText("Secuencial: " + formatter.format(duration / 1000) + " Microsegundos");
+                    } catch (RemoteException ex) {
                         throw new RuntimeException(ex);
                     }
                     break;
                 }
                 case EXECUTE -> {
                     try {
-                        long start = System.nanoTime();
-                        MatrixMultiplicationInterface access = (MatrixMultiplicationInterface) Naming.lookup("rmi://" + host + ":" + port + "/MatrixMultiplication");
                         int[][] resultMatrix = access.forkJoinMultiplication(matrix, 2, 0, matrix.length);
-                        long finish = System.nanoTime();
-                        long elapsed_time = finish - start;
-                        elapsedTimeExecute.setText("ForkJoin: " + formatter.format(elapsed_time / 1000) + " Microsegundos");
-                    } catch (NotBoundException | RemoteException | MalformedURLException ex) {
+                        long duration = access.getDuration();
+                        elapsedTimeForkJoin.setText("FrokJoin: " + formatter.format(duration / 1000) + " Microsegundos");
+                    } catch (RemoteException ex) {
                         throw new RuntimeException(ex);
                     }
                     break;
                 }
                 case FORKJOIN -> {
                     try {
-                        long start = System.nanoTime();
-                        MatrixMultiplicationInterface access = (MatrixMultiplicationInterface) Naming.lookup("rmi://" + host + ":" + port + "/MatrixMultiplication");
-                        int[][] resultMatrix = access.executorServiceMultiplication(matrix, 2);
-                        long finish = System.nanoTime();
-                        long elapsed_time = finish - start;
-                        elapsedTimeForkJoin.setText("Execute: " + formatter.format(elapsed_time / 1000) + " Microsegundos");
-                    } catch (NotBoundException | RemoteException | MalformedURLException ex) {
+                        int[][] resultMatrix  = access.executorServiceMultiplication(matrix, 2);
+                        long duration = access.getDuration();
+                        elapsedTimeExecute.setText("Execute: " + formatter.format(duration / 1000) + " Microsegundos");
+                    } catch (RemoteException ex) {
                         throw new RuntimeException(ex);
                     }
                     break;
